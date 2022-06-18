@@ -97,6 +97,7 @@ document.querySelectorAll('.nav__link').forEach(function (el) {
 // 2. Determine what element originated the event
 // nav__links is the parent of all 3 Link
 document.querySelector('.nav__links').addEventListener('click', function (e) {
+    e.preventDefault();
     // e.target will tell you where the event happened
     // console.log(e.target); // gives the link which was clicked
     // console.log(e.currentTarget);// givs nav__links as eventListener is attached to it
@@ -128,11 +129,11 @@ tabsContainer.addEventListener('click', function (e) {
     if (!clicked) return; //Guard clause
 
     //remove operations__tab--active class from the one who has it
-    tabs.forEach(t => t.classList.remove('operations__tab--activate'));
+    tabs.forEach(t => t.classList.remove('operations__tab--active'));
 
     clicked.classList.add('operations__tab--active');
-    
-    //remove activated component's class 
+
+    //remove activated component's class
     tabsContent.forEach(t => t.classList.remove('operations__content--active'));
 
     // Activate content area: data attribute is helpful here
@@ -140,3 +141,38 @@ tabsContainer.addEventListener('click', function (e) {
         .querySelector(`.operations__content--${clicked.dataset.tab}`)
         .classList.add('operations__content--active');
 });
+
+// NOTE: menu fade animation
+// we also want to work with logo, so we chose entire nav
+const nav = document.querySelector('.nav');
+
+// const handleHover = (e, opacity) => {
+//this is for bind method
+const handleHover = function (e) {
+    if (e.target.classList.contains('nav__link')) {
+        const link = e.target;
+        // selecting other links : select parent and children/sibling for other links
+        const siblings = link.closest('.nav').querySelectorAll('.nav__link');
+        const logo = link.closest('.nav').querySelector('img');
+
+        siblings.forEach(el => {
+            if (el !== link) el.style.opacity = this;
+        });
+        logo.style.opacity = this;
+    }
+};
+// mouse enter event does not bubble so we use mouseover, opposite of mouseover is mouseout
+// how to pass eventhandler function with parameters declared outside: if you do like this handleHover(e,0.5) as handler this will immediately gets executed which is not what we want
+
+/* 
+nav.addEventListener('mouseover', function (e) {
+    handleHover(e, 0.5);
+});
+nav.addEventListener('mouseout', function (e) {
+    handleHover(e, 1);
+});
+ */
+
+// more better solution : use bind method, in real event handler function should have only 1 parameter and that is event if you need to passs other parameter use bind method and give and array or object of arguments
+nav.addEventListener('mouseover', handleHover.bind(0.5));
+nav.addEventListener('mouseout', handleHover.bind(1));
