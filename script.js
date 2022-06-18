@@ -16,7 +16,7 @@ const allSections = document.querySelectorAll('.section');
 // getElementById : selects the element with matching Id
 document.getElementById('section--1');
 
-// getElementByTagName : selects all elements with given tag tagname : this returns a HTMLcollection which is different from nodelist , HTMLcollection changes immediately when something changes inside the page(updates automatically), this does not happen with nodelist
+// NOTE: getElementByTagName : selects all elements with given tag tagname : this returns a HTMLcollection which is different from nodelist , HTMLcollection changes immediately when something changes inside the page(updates automatically), this does not happen with nodelist
 const allButtons = document.getElementsByTagName('button');
 console.log(allButtons);
 
@@ -56,6 +56,8 @@ document.querySelector('.btn--close-cookie').addEventListener('click', () => {
     // using removeChild method require selecting parent first
     message.parentElement.removeChild(message);
 });
+message.style.backgroundColor = '#37383d';
+message.style.width = '120%';
 
 //
 //
