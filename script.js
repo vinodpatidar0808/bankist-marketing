@@ -101,7 +101,7 @@ document.querySelector('.nav__links').addEventListener('click', function (e) {
     // console.log(e.target); // gives the link which was clicked
     // console.log(e.currentTarget);// givs nav__links as eventListener is attached to it
 
-    //matching strategy: this is difficult to get 
+    //matching strategy: this is difficult to get
     if (e.target.classList.contains('nav__link')) {
         // you can't use this here as this points to element which is attached to eventListener
         const id = e.target.getAttribute('href');
@@ -109,3 +109,34 @@ document.querySelector('.nav__links').addEventListener('click', function (e) {
     }
 });
 // normally you can't add eventListener to element that does not exist on page at runtime, but with event delegation you can do that and attach eventListener to element that do not exist on page yet
+
+/* NOTE:  -------------TABBED COMPONENT-----------------*/
+const tabs = document.querySelectorAll('.operations__tab');
+const tabsContainer = document.querySelector('.operations__tab-container');
+const tabsContent = document.querySelectorAll('.operations__content');
+
+// doing this is a bad practice : what if you had 200 tabs, this function would be copied and attached to all 200 tabs
+// tabs.forEach(t => t.addEventListener('click', e => console.log('tab')));
+
+// use Event delegation
+tabsContainer.addEventListener('click', function (e) {
+    // matching strategy
+    // if you use parentElement than when you click on button itself it will give div container containing them
+    const clicked = e.target.closest('.operations__tab');
+    // console.log(clicked);
+    // you attached eventListener to tabsContainer so when you click outside it will show a console error
+    if (!clicked) return; //Guard clause
+
+    //remove operations__tab--active class from the one who has it
+    tabs.forEach(t => t.classList.remove('operations__tab--activate'));
+
+    clicked.classList.add('operations__tab--active');
+    
+    //remove activated component's class 
+    tabsContent.forEach(t => t.classList.remove('operations__content--active'));
+
+    // Activate content area: data attribute is helpful here
+    document
+        .querySelector(`.operations__content--${clicked.dataset.tab}`)
+        .classList.add('operations__content--active');
+});
