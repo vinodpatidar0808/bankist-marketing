@@ -13,7 +13,7 @@ document.querySelector('.nav__link').addEventListener('click', function (e) {
     // this in event handler points to the element which generated this event,if you are using arrow function for event handler this does not work with arrow remember
     // console.log(this);
     this.style.backgroundColor = randomColor();
-    //NOTE: e.target : is where the event happenen not where the event handler is attached
+    //NOTE: e.target : is where the event actually happened not where the event handler is attached
     // console.log('Link: ', e.target);
     //NOTE: e.currentTarget : the element to which event handler is attached
     // console.log('link-currentTarget : ', e.currentTarget);

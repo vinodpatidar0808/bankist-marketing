@@ -72,6 +72,40 @@ btnScrollTo.addEventListener('click', e => {
                 behavior: 'smooth', //  to implement smooth scroll
             });
     */
-    //NOTE:    modern way supported only in super modern browsers
+    //NOTE:    modern way :supported only in super modern browsers
     section1.scrollIntoView({ behavior: 'smooth' });
 });
+
+// NOTE: use event delegation to implement smooth scrolling through navigation
+
+// without event delegation: works fine but not efficient, exact event handler function is now attached to 3 elements
+/* 
+document.querySelectorAll('.nav__link').forEach(function (el) {
+    el.addEventListener('click', function (e) {
+        e.preventDefault();
+        // smooth scrolling
+        // this.href will give entire url, we only want id associated with href for scrolling to particular section
+        // this gets us or id selector already
+        const id = this.getAttribute('href');
+        document.querySelector(id).scrollIntoView({ behavior: 'smooth' });
+        // console.log(id);
+    });
+});
+ */
+// efficient: we know event bubbles up so we can add event listener on their common parent
+// 1. add eventListener to common parent element
+// 2. Determine what element originated the event
+// nav__links is the parent of all 3 Link
+document.querySelector('.nav__links').addEventListener('click', function (e) {
+    // e.target will tell you where the event happened
+    // console.log(e.target); // gives the link which was clicked
+    // console.log(e.currentTarget);// givs nav__links as eventListener is attached to it
+
+    //matching strategy: this is difficult to get 
+    if (e.target.classList.contains('nav__link')) {
+        // you can't use this here as this points to element which is attached to eventListener
+        const id = e.target.getAttribute('href');
+        document.querySelector(id).scrollIntoView({ behavior: 'smooth' });
+    }
+});
+// normally you can't add eventListener to element that does not exist on page at runtime, but with event delegation you can do that and attach eventListener to element that do not exist on page yet
