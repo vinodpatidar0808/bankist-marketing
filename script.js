@@ -193,11 +193,11 @@ window.addEventListener('scroll', function () {
 
 const header = document.querySelector('.header');
 const navHeight = nav.getBoundingClientRect().height;
-console.log(navHeight);
+// console.log(navHeight);
 // entries is always an array
 const stickyNav = entries => {
     const [entry] = entries;
-    console.log(entry);
+    // console.log(entry);
     if (!entry.isIntersecting) nav.classList.add('sticky');
     else nav.classList.remove('sticky');
 };
@@ -210,3 +210,27 @@ const headerObserver = new IntersectionObserver(stickyNav, {
     rootMargin: `-${navHeight}px`,
 });
 headerObserver.observe(header);
+
+// NOTE: revealing elements on scroll:
+// reveal sections
+const allSections = document.querySelectorAll('.section');
+
+// we are interacting with all sections using same observer, so we  need to figure out which element we are interacting with
+const revealSection = function (entries, observer) {
+    const [entry] = entries;
+    console.log(entry);
+    if (!entry.isIntersecting) return;
+    entry.target.classList.remove('section--hidden');
+    // unobserve sections after our work
+    observer.unobserve(entry.target);
+};
+const sectionObserver = new IntersectionObserver(revealSection, {
+    root: null,
+    threshold: 0.15,
+});
+
+// we could have added section--hidden class in html but doing that would mean if someone has disabled js in their browser the page won't be visible to them
+allSections.forEach(function (section) {
+    sectionObserver.observe(section);
+    section.classList.add('section--hidden');
+});
