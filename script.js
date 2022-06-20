@@ -176,3 +176,37 @@ nav.addEventListener('mouseout', function (e) {
 // more better solution : use bind method, in real event handler function should have only 1 parameter and that is event if you need to passs other parameter use bind method and give and array or object of arguments
 nav.addEventListener('mouseover', handleHover.bind(0.5));
 nav.addEventListener('mouseout', handleHover.bind(1));
+
+//NOTE: sticky navigation :
+/* 
+// using scroll event : scroll event is available on window, scroll event is not efficient (keeps firing all the time) and should be avoided
+const initialCoords = section1.getBoundingClientRect();
+// console.log(initialCoords);
+window.addEventListener('scroll', function () {
+    // console.log(window.scrollY);
+    if (window.scrollY > initialCoords.top) nav.classList.add('sticky');
+    else nav.classList.remove('sticky');
+});
+ */
+
+// efficient: intersection observer API
+
+const header = document.querySelector('.header');
+const navHeight = nav.getBoundingClientRect().height;
+console.log(navHeight);
+// entries is always an array
+const stickyNav = entries => {
+    const [entry] = entries;
+    console.log(entry);
+    if (!entry.isIntersecting) nav.classList.add('sticky');
+    else nav.classList.remove('sticky');
+};
+const headerObserver = new IntersectionObserver(stickyNav, {
+    root: null,
+    threshold: 0,
+    // 90 means a box of 90 pixel will be applied outside of our target element, -90 will apply box inside
+    // why 90 : 90 px is height of navigation menu, what if your page is responsive: you can calculate height using getBoundingClientRect
+    // rootMargin: '-90px',
+    rootMargin: `-${navHeight}px`,
+});
+headerObserver.observe(header);
