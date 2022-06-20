@@ -218,7 +218,7 @@ const allSections = document.querySelectorAll('.section');
 // we are interacting with all sections using same observer, so we  need to figure out which element we are interacting with
 const revealSection = function (entries, observer) {
     const [entry] = entries;
-    console.log(entry);
+    // console.log(entry);
     if (!entry.isIntersecting) return;
     entry.target.classList.remove('section--hidden');
     // unobserve sections after our work
@@ -234,3 +234,27 @@ allSections.forEach(function (section) {
     sectionObserver.observe(section);
     section.classList.add('section--hidden');
 });
+
+// NOTE: lazy loading images, images have biggest impact on performance hence they should be optimized for better performance
+// lazy loading images : very imp for performance
+// we don't want to lazy load all the images on the page, we only want to lazy load images which have data-src attribute
+const imageTargets = document.querySelectorAll('img[data-src]');
+
+const loadImg = (entries, observer) => {
+    // entry is for threshold, and we have only one threshold so we are destructuring it
+    const [entry] = entries;
+    // console.log(entry);
+    if (!entry.isIntersecting) return;
+    entry.target.src = entry.target.dataset.src;
+    // javascript changes the source of image and loads the new image behind the scene, once the image is loaded then only we want to display it w/o blur, for that we can listen for load event
+    entry.target.addEventListener('load', function () {
+        entry.target.classList.remove('lazy-img');
+    });
+    observer.unobserve(entry.target);
+};
+const imgObserver = new IntersectionObserver(loadImg, {
+    root: null,
+    threshold: 0,
+    rootMargin: '200px',
+});
+imageTargets.forEach(img => imgObserver.observe(img));
